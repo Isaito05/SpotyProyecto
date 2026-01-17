@@ -1,22 +1,38 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>
-      Home
-    </ion-title>
+<ion-header [style.--background]="colorSlideActual">
+  <ion-toolbar [style.--background]="colorSlideActual">
+    <ion-title [style.--color]="colorTituloActualSlide">Home</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cambiarColorSlide()" fill="clear" color="primary">
+        <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content [style.--background]="colorSlideActual">
 
-  <swiper-container pagination="true" loop="true" slides-per-view="1" navigation="true" style="height: 100%;">
+  <swiper-container pagination="true" loop="true" slides-per-view="1" navigation="true">
+
     <swiper-slide *ngFor="let genre of genres">
-
       <div class="slide-content">
-        <h2>{{ genre.title }}</h2>
+        <h2 [style.color]="colorTituloActualSlide">{{ genre.title }}</h2>
         <img [src]="genre.image" [alt]="genre.title">
-        <p>{{ genre.description }}</p>
+        <p [style.color]="colorLetrasActualSlide">{{ genre.description }}</p>
       </div>
     </swiper-slide>
+
   </swiper-container>
-  
+
+
+  <div>
+    <h3 [style.color]="colorLetrasActualSlide">Demo ionic Storage</h3>
+    <div [style.--background-color]="colorSlideActual">
+      <p [style.color]="colorLetrasActualSlide">Tema Actual: {{ colorSlideActual === colorSlideOscuro ? 'color oscuro':'color claro' }}</p>
+    </div>
+  </div>
+
+  <div> 
+    <ion-button (click)="cambiarColorSlide()">Cambiar Tema y Guardar</ion-button>
+  </div>
+
 </ion-content>

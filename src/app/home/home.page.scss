@@ -24,3 +24,12 @@
   text-align: justify;
 }
 
+.card{ 
+  padding: var(--espaciado-base);
+  background-color: var(--color-claro);
+}
+
+.bg-card-text{
+  background-color: rgb(231, 34, 142);
+}
+
