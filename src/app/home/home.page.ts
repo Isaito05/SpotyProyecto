@@ -65,6 +65,7 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     await this.cargarTemaGuardado();
+    this.simularCargarDatos();
   }
 
 
@@ -104,6 +105,21 @@ export class HomePage implements OnInit {
       this.colorSlideActual = temaGuardado;
     }
   }
+
+  async simularCargarDatos() {
+    const data = await this.obtenerDatos();
+    console.log('Datos cargados:', data);
+  }
+
+  obtenerDatos(){
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(['Rock', 'pop', 'Jazz']);
+        //reject('Error al obtener datos');
+      }, 6000);
+    });
+  }
+  
 
   goIntro() {
     this.router.navigate(['/intro']);
