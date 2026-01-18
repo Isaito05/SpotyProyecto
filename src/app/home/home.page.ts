@@ -4,13 +4,15 @@ import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/stan
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { sunny, moon } from 'ionicons/icons';
+import { sunny, moon, code} from 'ionicons/icons';
 import { StorageService } from '../services/storage-service';
+import { Router } from '@angular/router';
 
-
+  
 addIcons({
   'sunny': sunny,
-  'moon': moon
+  'moon': moon,
+  'code': code,
 });
 
 
@@ -59,7 +61,7 @@ export class HomePage implements OnInit {
 
   ]
 
-  constructor(private storageService: StorageService) { }
+  constructor(private storageService: StorageService, private router: Router) { }
 
   async ngOnInit() {
     await this.cargarTemaGuardado();
@@ -92,11 +94,19 @@ export class HomePage implements OnInit {
     return this.isDay ? 'sunny' : 'moon';
   }
 
+  get code() {
+    return 'code';
+  }
+
   async cargarTemaGuardado() {
     const temaGuardado = await this.storageService.get('tema');
     if (temaGuardado) {
       this.colorSlideActual = temaGuardado;
     }
+  }
+
+  goIntro() {
+    this.router.navigate(['/intro']);
   }
 
 }

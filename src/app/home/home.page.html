@@ -6,6 +6,11 @@
         <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="goIntro()" fill="clear" color="primary">
+        <ion-icon slot="icon-only" [name]="code"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -20,19 +25,5 @@
         <p [style.color]="colorLetrasActualSlide">{{ genre.description }}</p>
       </div>
     </swiper-slide>
-
   </swiper-container>
-
-
-  <div>
-    <h3 [style.color]="colorLetrasActualSlide">Demo ionic Storage</h3>
-    <div [style.--background-color]="colorSlideActual">
-      <p [style.color]="colorLetrasActualSlide">Tema Actual: {{ colorSlideActual === colorSlideOscuro ? 'color oscuro':'color claro' }}</p>
-    </div>
-  </div>
-
-  <div> 
-    <ion-button (click)="cambiarColorSlide()">Cambiar Tema y Guardar</ion-button>
-  </div>
-
 </ion-content>
