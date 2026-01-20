@@ -16,14 +16,5 @@
 
 <ion-content [style.--background]="colorSlideActual">
 
-  <swiper-container pagination="true" loop="true" slides-per-view="1" navigation="true">
 
-    <swiper-slide *ngFor="let genre of genres">
-      <div class="slide-content">
-        <h2 [style.color]="colorTituloActualSlide">{{ genre.title }}</h2>
-        <img [src]="genre.image" [alt]="genre.title">
-        <p [style.color]="colorLetrasActualSlide">{{ genre.description }}</p>
-      </div>
-    </swiper-slide>
-  </swiper-container>
 </ion-content>

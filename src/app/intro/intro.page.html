@@ -1,18 +1,48 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>intro</ion-title>
+<ion-header [style.--background]="colorSlideActual">
+  <ion-toolbar [style.--background]="colorSlideActual">
+    <ion-title [style.--color]="colorEncabezadoActual">Intro</ion-title>
     <ion-buttons slot="end">
+      <ion-button (click)="cambiarColorSlide()" fill="clear" color="primary">
+        <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <!-- <ion-buttons slot="end">
       <ion-button (click)="goBack()" fill="clear" color="primary">
         <ion-icon slot="icon-only" [name]="code"></ion-icon>
       </ion-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
-  <ion-header >
-    <ion-toolbar>
-      <ion-title size="large">intro</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+
+  <swiper-container pagination="true" loop="true" slides-per-view="1" navigation="true">
+    <swiper-slide *ngFor="let genre of genres; let i = index">
+      <div class="slide-content">
+        <img class="img" [src]="genre.image" [alt]="genre.title">
+        <h1 class="ion-text-uppercase ion-text-center" [style.color]="colorTituloActualSlide">
+          {{ genre.title }}
+        </h1>
+        <h5 class="ion-text-center ion-text-wrap" [style.color]="colorLetrasActualSlide">
+          {{ genre.description }}
+        </h5>
+      </div>
+
+      <div class="slide-footer" *ngIf="i === genres.length - 1">
+        <ion-button shape="round" size="large" fill="solid" color="primary" (click)="goBack()">
+
+          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+          Home
+        </ion-button>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+
+  <!-- <div>
+    <p class="ion-text-center ion-text-uppercase">Texto centrado</p>
+    <p class="ion-text-left ion-text-lowercase">Texto a la izquierda</p>
+    <p class="ion-text-right ion-text-capitalize">Texto a la derecha</p>
+    <p class="ion-hide">Hola no me veo</p>
+    <p class="d-block ion-margin ion-padding">Yo si me veo</p>
+  </div> -->
 </ion-content>
