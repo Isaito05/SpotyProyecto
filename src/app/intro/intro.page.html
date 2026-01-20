@@ -16,7 +16,7 @@
 
 <ion-content>
 
-  <swiper-container pagination="true" loop="true" slides-per-view="1" navigation="true">
+  <swiper-container pagination="true" loop="true" slides-per-view="1" >
     <swiper-slide *ngFor="let genre of genres; let i = index">
       <div class="slide-content">
         <img class="img" [src]="genre.image" [alt]="genre.title">
@@ -31,7 +31,7 @@
       <div class="slide-footer" *ngIf="i === genres.length - 1">
         <ion-button shape="round" size="large" fill="solid" color="primary" (click)="goBack()">
 
-          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+          <ion-icon name="home" slot="start"></ion-icon>
           Home
         </ion-button>
       </div>

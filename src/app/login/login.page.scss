@@ -1,0 +1,61 @@
+.profile-default-image img {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: 15px;
+}
+h1 {
+  margin-top: 16px;
+  font-weight: bold;
+  color: #05969b;
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.error-note {
+  margin-left: 16px;
+  margin-top: 4px;
+  font-size: 0.75rem;
+}
+
+ion-content {
+  --background: none;
+  background: url('/assets/img/fondoBlanco.jpg') no-repeat center center / cover;
+}
+
+ion-item {
+  --background: transparent;
+  --background-focused: transparent;
+  --background-hover: transparent;
+  --background-activated: transparent;
+
+  --border-color: rgba(255, 255, 255, 0.6);
+  --highlight-color-focused: #ffffff;
+}
+
+/* Color del texto */
+ion-input {
+  --color: #05969b;
+}
+
+/* Color del label */
+ion-input::part(label) {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Línea inferior (modo material) */
+ion-item::part(native) {
+  background: transparent;
+}
+
+.login-button {
+  --background: #05969b;
+  --color: #ffffff;
+}
+
+

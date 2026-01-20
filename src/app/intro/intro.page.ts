@@ -4,15 +4,19 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { StorageService } from '../services/storage-service';
-import { sunny, moon, code, arrowBackOutline} from 'ionicons/icons';
+import { sunny, moon, code, arrowBackOutline, home} from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 addIcons({
   'sunny': sunny,
   'moon': moon,
   'code': code,
-  'arrow-back-outline': arrowBackOutline
+  'arrow-back-outline': arrowBackOutline,
+  'home': home
 });
 
 @Component({
