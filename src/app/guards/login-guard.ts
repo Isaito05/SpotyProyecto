@@ -7,19 +7,18 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 
-export class IntroGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
 
   constructor(private storageService: StorageService, private router: Router) { }
 
   async canActivate(): Promise<boolean> {
-    const yaEstuvoEnIntro = await this.storageService.get('pestaña');
-    
-    if (yaEstuvoEnIntro) {
+    const yaEstoyLogueado = await this.storageService.get('login');
+
+   if (yaEstoyLogueado) {
       return true;
     }
 
-    this.router.navigate(['/intro']);
+    this.router.navigate(['/login']);
     return false;
   }
 }
-

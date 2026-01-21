@@ -1,6 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>login</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goRegistro()" fill="clear" color="primary">
+        <ion-icon slot="icon-only" name="person-add" color="secondary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -32,4 +37,5 @@
           sesión</ion-button>
       </div>
     </form>
+    <p class="danger">{{ errorMessage }}</p>
 </ion-content>

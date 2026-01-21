@@ -1,31 +1,13 @@
-.profile-default-image img {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  margin-top: 15px;
-}
-h1 {
-  margin-top: 16px;
-  font-weight: bold;
-  color: #05969b;
-}
-
-.login-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-}
-
-.error-note {
-  margin-left: 16px;
-  margin-top: 4px;
-  font-size: 0.75rem;
-}
-
 ion-content {
   --background: none;
   background: url('/assets/img/fondoBlanco.jpg') no-repeat center center / cover;
+}
+
+.profile-default-image img {
+  border-radius: 25%;
+  width: 100px;
+  height: 100px;
+  margin-top: 15px;
 }
 
 ion-item {
@@ -45,7 +27,7 @@ ion-input {
 
 /* Color del label */
 ion-input::part(label) {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 /* Línea inferior (modo material) */
@@ -53,7 +35,7 @@ ion-item::part(native) {
   background: transparent;
 }
 
-.login-button {
+.registro-button {
   --background: #05969b;
   --color: #ffffff;
 }
@@ -64,4 +46,8 @@ ion-item::part(native) {
   text-align: center;
 }
 
-
+h1 {
+  margin-top: 16px;
+  font-weight: bold;
+  color: #05969b;
+}

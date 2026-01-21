@@ -1,18 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
+import { AuthService } from '../services/auth-service';
+import { StorageService } from '../services/storage-service';
+import { addIcons } from 'ionicons';
+import { sunny, moon, code, personAdd} from 'ionicons/icons';
 
+addIcons({
+  'sunny': sunny,
+  'moon': moon,
+  'code': code,
+  'person-add': personAdd
+});
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonicModule, ReactiveFormsModule]
+  imports: [CommonModule, FormsModule, IonicModule, ReactiveFormsModule],
 })
 export class LoginPage implements OnInit {
 
   loginForm: FormGroup;
+  errorMessage: string = '';
 
   validationMessages = {
     email: [
@@ -25,7 +36,7 @@ export class LoginPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService) {
 
     this.loginForm = this.formBuilder.group({
       email: new FormControl
@@ -44,11 +55,22 @@ export class LoginPage implements OnInit {
 
   }
 
-  ngOnInit() {
+   ngOnInit() {
   }
 
-  loginUser(credentials: any) {
+    loginUser(credentials: any) {
     console.log('Login attempt with credentials:', credentials);
+    this.authService.loginUser(credentials).then((res) => {
+        this.errorMessage = '';
+        this.navCtrl.navigateForward('/home');
+      }).catch((err) => {
+          this.errorMessage = err;
+        });
+  }
+
+  async goRegistro() {
+    this.navCtrl.navigateForward('/registro');
+    console.log('Navegando a registro...');
   }
 
   getEmailError(): string {
