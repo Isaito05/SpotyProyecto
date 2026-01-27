@@ -16,12 +16,7 @@
 
 <ion-content class="music-content" [style.--background]="colorSlideActual">
 
-  <swiper-container 
-    class="music-swiper"
-    [pagination]="true"
-    loop="true"
-    slides-per-view="1"
-    space-between="20"
+  <swiper-container class="music-swiper" [pagination]="true" loop="true" slides-per-view="1" space-between="20"
     centered-slides="true">
 
     <swiper-slide *ngFor="let album of albums; let i = index" (click)="showSongs(album.id)">
@@ -42,12 +37,7 @@
     </swiper-slide>
   </swiper-container>
 
-  <swiper-container 
-    class="music-swiper"
-    [pagination]="true"
-    loop="true"
-    slides-per-view="1"
-    space-between="20"
+  <swiper-container class="music-swiper" [pagination]="true" loop="true" slides-per-view="1" space-between="20"
     centered-slides="true">
 
     <swiper-slide *ngFor="let artist of artists; let i = index" (click)="showSongsByArtist(artist.id)">
@@ -68,3 +58,11 @@
   </swiper-container>
 
 </ion-content>
+<ion-footer>
+<ion-text color="danger" *ngIf="!song.name">
+  <h2>Aqui se vera mi cancion</h2>
+</ion-text>
+<ion-text color="primary" *ngIf="song.name">
+  <h2>{{song.name}}</h2>
+</ion-text>
+</ion-footer>

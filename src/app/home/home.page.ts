@@ -48,7 +48,13 @@ export class HomePage implements OnInit {
   albums: any;
   localArtists: any;
   artists: any;
+  song: any = {
+    name: "",
+    prview_url:"",
+    playing: false
+  } ;
 
+  currentSong: any;
 
   genres = [
     {
@@ -191,6 +197,12 @@ export class HomePage implements OnInit {
         songs: songs
       }
     });
+    modal.onDidDismiss().then((result)=>{
+      if(result.data){
+        console.log("Cancio recibida:", result.data)
+        this.song = result.data;
+      }
+    })
     return await modal.present();
   }
 
