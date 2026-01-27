@@ -24,27 +24,46 @@
     space-between="20"
     centered-slides="true">
 
-    <swiper-slide *ngFor="let album of albums; let i = index">
-      
+    <swiper-slide *ngFor="let album of albums; let i = index" (click)="showSongs(album.id)">
       <div class="music-card">
-
         <div class="image-container">
           <img [src]="album.image" [alt]="album.title">
           <div class="overlay"></div>
         </div>
-
         <div class="music-info">
           <h1>{{ album.name }}</h1>
           <p>{{ album.artist || 'Artista desconocido' }}</p>
-
           <ion-button class="play-btn" shape="round">
             <ion-icon name="play" slot="start"></ion-icon>
             Reproducir
           </ion-button>
         </div>
-
       </div>
+    </swiper-slide>
+  </swiper-container>
 
+  <swiper-container 
+    class="music-swiper"
+    [pagination]="true"
+    loop="true"
+    slides-per-view="1"
+    space-between="20"
+    centered-slides="true">
+
+    <swiper-slide *ngFor="let artist of artists; let i = index" (click)="showSongsByArtist(artist.id)">
+      <div class="music-card">
+        <div class="image-container">
+          <img [src]="artist.image" [alt]="artist.name">
+          <div class="overlay"></div>
+        </div>
+        <div class="music-info">
+          <h1>{{ artist.name || 'Género desconocido' }}</h1>
+          <ion-button class="play-btn" shape="round">
+            <ion-icon name="play" slot="start"></ion-icon>
+            Reproducir
+          </ion-button>
+        </div>
+      </div>
     </swiper-slide>
   </swiper-container>
 

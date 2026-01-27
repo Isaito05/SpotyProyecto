@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule, NavController, ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth-service';
 import { StorageService } from '../services/storage-service';
 import { addIcons } from 'ionicons';
@@ -58,7 +58,7 @@ export class LoginPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService, private toastController: ToastController) {
 
     this.loginForm = this.formBuilder.group({
       email: new FormControl
@@ -134,13 +134,33 @@ export class LoginPage implements OnInit {
 
   loginUser(credentials: any) {
     console.log('Login attempt with credentials:', credentials);
-    this.authService.loginUser(credentials).then((res) => {
-      this.errorMessage = '';
-      this.navCtrl.navigateForward('/menu/home');
-    }).catch((err) => {
-      this.errorMessage = err;
-    });
+
+    this.authService.loginUser(credentials)
+      .then((res) => {
+        this.errorMessage = '';
+
+        // ✅ Mensaje bonito de éxito
+        this.showToast(
+          '¡Bienvenido! Sesión iniciada correctamente 👋',
+          'success',
+          'checkmark-circle'
+        );
+
+        this.navCtrl.navigateForward('/menu/home');
+      })
+      .catch((err) => {
+
+        // ❌ Mensaje bonito de error
+        this.showToast(
+          'Correo o contraseña incorrectos 😕',
+          'danger',
+          'close-circle'
+        );
+
+        this.errorMessage = 'Credenciales inválidas';
+      });
   }
+
 
   async goRegistro() {
     this.navCtrl.navigateForward('/registro');
@@ -176,4 +196,22 @@ export class LoginPage implements OnInit {
 
     return '';
   }
+
+  async showToast(message: string, color: string = 'success', icon: string = 'checkmark-circle') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2500,
+      position: 'bottom',
+      color,
+      icon,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
+  }
+
 }

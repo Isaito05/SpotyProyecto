@@ -30,4 +30,8 @@ export const routes: Routes = [
         loadComponent: () => import('./home/home.page').then((m) => m.HomePage), canActivate: [IntroGuard, LoginGuard],
       },]
   },
+  {
+    path: 'songs-modal',
+    loadComponent: () => import('./songs-modal/songs-modal.page').then( m => m.SongsModalPage)
+  },
 ];

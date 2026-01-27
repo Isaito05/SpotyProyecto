@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { IonicModule, NavController } from '@ionic/angular';
+import { IonicModule, NavController, ToastController } from '@ionic/angular';
 import { RegistroService } from '../services/registro-service';
 import { addIcons } from 'ionicons';
 import { sunny, moon, code, logIn } from 'ionicons/icons';
@@ -65,7 +65,7 @@ export class RegistroPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, private navCtrl: NavController, private registroService: RegistroService, private storageService: StorageService) {
+  constructor(private formBuilder: FormBuilder, private navCtrl: NavController, private registroService: RegistroService, private storageService: StorageService, private toastController: ToastController) {
     this.registroForm = this.formBuilder.group({
       email: new FormControl
         ('', Validators.compose([
@@ -147,20 +147,43 @@ export class RegistroPage implements OnInit {
 
 
   async ngOnInit() {
-   await this.cargarTemaGuardado();
+    await this.cargarTemaGuardado();
   }
 
-  
+
 
   RegistrarUser(datos: any) {
     console.log('Registro attempt with data:', datos);
-    this.registroService.registrarUsuario(datos).then((res) => {
-      this.errorMessage = '';
-      this.navCtrl.navigateForward('/login');
-    }).catch((err) => {
-      this.errorMessage = err;
-    });
+
+    this.registroService.registrarUsuario(datos)
+      .then((res) => {
+        this.errorMessage = '';
+
+        // ✅ Mensaje bonito de éxito
+        this.showToast(
+          '🎉 Registro exitoso. Ya puedes iniciar sesión',
+          'success',
+          'person-add'
+        );
+
+        // redirección con pequeño delay para que se vea el toast
+        setTimeout(() => {
+          this.navCtrl.navigateForward('/login');
+        }, 1200);
+      })
+      .catch((err) => {
+
+        // ❌ Mensaje bonito de error
+        this.showToast(
+          '❌ Error al registrar usuario. Intenta nuevamente',
+          'danger',
+          'alert-circle'
+        );
+
+        this.errorMessage = 'Error en el registro';
+      });
   }
+
 
   async goLogin() {
     this.navCtrl.navigateForward('/login');
@@ -215,6 +238,23 @@ export class RegistroPage implements OnInit {
     }
 
     return '';
+  }
+
+  async showToast(message: string, color: string = 'success', icon: string = 'checkmark-circle') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2500,
+      position: 'bottom',
+      color,
+      icon,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
   }
 
 

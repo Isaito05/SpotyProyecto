@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { IonicModule, ModalController} from '@ionic/angular';
 //import { IonicModule} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -8,6 +8,8 @@ import { sunny, moon, } from 'ionicons/icons';
 import { StorageService } from '../services/storage-service';
 import { Router } from '@angular/router';
 import { MusicService } from '../services/music-service';
+import { SongsModalPage } from '../songs-modal/songs-modal.page';
+
 
 
 addIcons({
@@ -20,7 +22,7 @@ addIcons({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, CommonModule],
+  imports: [IonicModule, CommonModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HomePage implements OnInit {
@@ -44,6 +46,8 @@ export class HomePage implements OnInit {
   isDay: boolean = true;
   tracks: any;
   albums: any;
+  localArtists: any;
+  artists: any;
 
 
   genres = [
@@ -66,19 +70,28 @@ export class HomePage implements OnInit {
 
   ]
 
-  constructor(private storageService: StorageService, private router: Router, private musicService: MusicService) { }
+  constructor(private storageService: StorageService, private router: Router, private musicService: MusicService, private modalController: ModalController) { }
 
   async ngOnInit() {
     this.loadAlbums();
     this.loadTracks();
+    this.loadArtists();
     await this.cargarTemaGuardado();
     this.simularCargarDatos();
+    this.getLocalArtists();
   }
 
   loadTracks() {
     this.musicService.getTracks().then(tracks => {
       this.tracks = tracks;
       console.log('Tracks cargados:', this.tracks);
+    });
+  }
+
+  loadArtists() {
+    this.musicService.getArtists().then(artists => {
+      this.artists = artists;
+      console.log('Artistas cargados:', this.artists);
     });
   }
 
@@ -160,6 +173,39 @@ export class HomePage implements OnInit {
 
   goIntro() {
     this.router.navigate(['/intro']);
+  }
+
+  getLocalArtists() {
+    this.localArtists = this.musicService.getLocalArtists();
+    console.log('Artistas locales cargados:', this.localArtists.artists);
+  }
+
+  async showSongs(albumId: string) {
+    console.log('ID del álbum seleccionado:', albumId);
+    const songs = await this.musicService.getSonByAlbums(albumId);
+    console.log('Canciones del álbum:', songs);
+
+    const modal = await this.modalController.create({
+      component: SongsModalPage, 
+      componentProps: {
+        songs: songs
+      }
+    });
+    return await modal.present();
+  }
+
+  async showSongsByArtist(artistId: string) {
+    console.log('ID del artista seleccionado:', artistId);
+    const songs = await this.musicService.getSonByArtist(artistId);
+    console.log('Canciones del artista:', songs);
+
+    const modal = await this.modalController.create({
+      component: SongsModalPage, 
+      componentProps: {
+        songs: songs
+      }
+    });
+    return await modal.present();
   }
 
 }
