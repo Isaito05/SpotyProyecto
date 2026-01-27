@@ -1,18 +1,18 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
 //import { IonicModule} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { sunny, moon, code} from 'ionicons/icons';
+import { sunny, moon, } from 'ionicons/icons';
 import { StorageService } from '../services/storage-service';
 import { Router } from '@angular/router';
+import { MusicService } from '../services/music-service';
 
-  
+
 addIcons({
   'sunny': sunny,
   'moon': moon,
-  'code': code,
 });
 
 
@@ -31,14 +31,19 @@ export class HomePage implements OnInit {
   colorLetrasOscuroSlide = "var(--color-letras-oscuras-slide)";
   colorTituloClarasSlide = "var(--color-titulo-claras-slide)";
   colorTituloOscuroSlide = "var(--color-titulo-oscuras-slide)";
+  colorEncabezadoClaras = "var(--color-encabe-claras-slide)";
+  colorEncabezadoOscuro = "var(--color-encabe-oscuras-slide)";
 
   modoOscuro = true;
 
   colorSlideActual = this.colorSlideOscuro;
   colorLetrasActualSlide = this.colorLetrasClarasSlide;
   colorTituloActualSlide = this.colorTituloClarasSlide;
+  colorEncabezadoActual = this.colorEncabezadoClaras;
 
   isDay: boolean = true;
+  tracks: any;
+  albums: any;
 
 
   genres = [
@@ -61,37 +66,65 @@ export class HomePage implements OnInit {
 
   ]
 
-  constructor(private storageService: StorageService, private router: Router) { }
+  constructor(private storageService: StorageService, private router: Router, private musicService: MusicService) { }
 
   async ngOnInit() {
+    this.loadAlbums();
+    this.loadTracks();
     await this.cargarTemaGuardado();
     this.simularCargarDatos();
   }
 
+  loadTracks() {
+    this.musicService.getTracks().then(tracks => {
+      this.tracks = tracks;
+      console.log('Tracks cargados:', this.tracks);
+    });
+  }
+
+  loadAlbums() {
+    this.musicService.getAlbums().then(albums => {
+      this.albums = albums;
+      console.log('Albums cargados:', this.albums);
+    });
+  }
 
   async cambiarColorSlide() {
     this.modoOscuro = !this.modoOscuro;
 
-    this.colorSlideActual = this.modoOscuro
+    this.aplicarTema(this.modoOscuro);
+
+    await this.storageService.set('tema', {
+      modoOscuro: this.modoOscuro
+    });
+
+    console.log('Tema guardado:', this.modoOscuro);
+  }
+
+  aplicarTema(esOscuro: boolean) {
+    this.modoOscuro = esOscuro;
+
+    this.colorSlideActual = esOscuro
       ? this.colorSlideOscuro
       : this.colorSlideClaro;
 
-    this.colorLetrasActualSlide = this.modoOscuro
+    this.colorLetrasActualSlide = esOscuro
       ? this.colorLetrasClarasSlide
       : this.colorLetrasOscuroSlide;
 
-    this.colorTituloActualSlide = this.modoOscuro
+    this.colorTituloActualSlide = esOscuro
       ? this.colorTituloClarasSlide
       : this.colorTituloOscuroSlide;
 
-    this.isDay = !this.isDay;
+    this.colorEncabezadoActual = esOscuro
+      ? this.colorEncabezadoClaras
+      : this.colorEncabezadoOscuro;
 
-    await this.storageService.set('tema', this.colorSlideActual);
-    console.log('Tema guardado:', this.colorSlideActual);
-
+    // 🔥 ESTO ES LO QUE TE FALTABA
+    this.isDay = esOscuro;
   }
 
-   get iconoActual() {
+  get iconoActual() {
     return this.isDay ? 'sunny' : 'moon';
   }
 
@@ -101,8 +134,12 @@ export class HomePage implements OnInit {
 
   async cargarTemaGuardado() {
     const temaGuardado = await this.storageService.get('tema');
-    if (temaGuardado) {
-      this.colorSlideActual = temaGuardado;
+
+    if (temaGuardado && typeof temaGuardado.modoOscuro === 'boolean') {
+      this.aplicarTema(temaGuardado.modoOscuro);
+    } else {
+      // tema por defecto
+      this.aplicarTema(true);
     }
   }
 
@@ -111,7 +148,7 @@ export class HomePage implements OnInit {
     console.log('Datos cargados:', data);
   }
 
-  obtenerDatos(){
+  obtenerDatos() {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(['Rock', 'pop', 'Jazz']);
@@ -119,7 +156,7 @@ export class HomePage implements OnInit {
       }, 6000);
     });
   }
-  
+
 
   goIntro() {
     this.router.navigate(['/intro']);

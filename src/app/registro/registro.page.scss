@@ -1,12 +1,12 @@
-ion-content {
-  --background: none;
-  background: url('/assets/img/fondoBlanco.jpg') no-repeat center center / cover;
-}
+// ion-content {
+//   --background: none;
+//   background: url('/assets/img/fondoBlanco.jpg') no-repeat center center / cover;
+// }
 
 .profile-default-image img {
   border-radius: 25%;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   margin-top: 15px;
 }
 
@@ -51,3 +51,5 @@ h1 {
   font-weight: bold;
   color: #05969b;
 }
+
+

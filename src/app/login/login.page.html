@@ -1,6 +1,11 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
+<ion-header [style.--background]="colorSlideActual">
+  <ion-toolbar [style.--background]="colorSlideActual">
+    <ion-title [style.--color]="colorEncabezadoActual">login</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cambiarColorSlide()" fill="clear" color="primary">
+        <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="goRegistro()" fill="clear" color="primary">
         <ion-icon slot="icon-only" name="person-add" color="secondary"></ion-icon>
@@ -9,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding" scrollY="false">
+<ion-content class="ion-padding" scrollY="false" [style.--background]="colorSlideActual">
 
     <figure class="profile-default-image ion-text-center">
       <h1>Inicar Sesión</h1>

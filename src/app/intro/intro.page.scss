@@ -1,28 +1,38 @@
-ion-content {
-  --background: none;
-  background: url('/assets/img/fondo.jpg') no-repeat center center / cover;
-}
+// ion-content {
+//   --background: none;
+//   background: url('/assets/img/fondo.jpg') no-repeat center center / cover;
+// }
 
 .img {
-  margin-left: 15%;
-  margin-top: 30%;
-  width: 70%;
-  height: auto;
+  margin-top: 15%;
+  width: 200%;
+  height: 100%;
 }
 
 h1 {
   font-weight: bold;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family:"Times New Roman", Times, serif;
 }
 
 h5 {
   font-weight: bold;
-  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family:"Times New Roman", Times, serif;
+  padding: 10px;
 }
 
 .slide-footer {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+.ion-button-Home {
+  --background: var(--color-claro);
+  --color: white;
+  --border-radius: 20px;
+  width: 150px;
+  height: 40px;
+  font-weight: bold;
+  font-family:"Times New Roman", Times, serif;
 }
 

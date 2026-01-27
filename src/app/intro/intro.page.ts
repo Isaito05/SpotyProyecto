@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule} from '@ionic/angular';
 import { Router } from '@angular/router';
 import { StorageService } from '../services/storage-service';
-import { sunny, moon, code, arrowBackOutline, home} from 'ionicons/icons';
+import { sunny, moon} from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { register } from 'swiper/element/bundle';
@@ -14,9 +14,7 @@ register();
 addIcons({
   'sunny': sunny,
   'moon': moon,
-  'code': code,
-  'arrow-back-outline': arrowBackOutline,
-  'home': home
+
 });
 
 @Component({
@@ -39,11 +37,11 @@ export class IntroPage implements OnInit {
   colorEncabezadoClaras = "var(--color-encabe-claras-slide)";
   colorEncabezadoOscuro = "var(--color-encabe-oscuras-slide)";
 
-  modoOscuro = false;
+  modoOscuro = true;
 
   colorSlideActual = this.colorSlideOscuro;
-  colorLetrasActualSlide = this.colorLetrasOscuroSlide;
-  colorTituloActualSlide = this.colorTituloOscuroSlide;
+  colorLetrasActualSlide = this.colorLetrasClarasSlide;
+  colorTituloActualSlide = this.colorTituloClarasSlide;
   colorEncabezadoActual = this.colorEncabezadoClaras;
 
 
@@ -52,22 +50,22 @@ export class IntroPage implements OnInit {
   genres = [
     {
       title: "Bienvenidos",
-      image: "/assets/img/audifonos.png",
+      image: "/assets/img/newlOGO.png",
       description: "Descubre un mundo de sonidos y emociones. Explora géneros, artistas y canciones que acompañan cada momento de tu día."
     },
     {
       title: "Disfruta",
-      image: "/assets/img/microfono.png",
+      image: "/assets/img/newlOGO.png",
       description: "La música que amas, en un solo lugar. Explora, siente y conecta con cada ritmo."
     },
     {
       title: "Deleitate",
-      image: "/assets/img/audifonos.png",
+      image: "/assets/img/newlOGO.png",
       description: "La música es el lenguaje de las emociones. Sumérgete en ritmos, melodías y sonidos creados para inspirarte."
     },
     {
       title: "Explora",
-      image: "/assets/img/microfono.png",
+      image: "/assets/img/newlOGO.png",
       description: "Explora nuevos géneros, revive clásicos y encuentra la música perfecta para cada instante."
     },
 
@@ -85,27 +83,36 @@ export class IntroPage implements OnInit {
   async cambiarColorSlide() {
     this.modoOscuro = !this.modoOscuro;
 
-    this.colorSlideActual = this.modoOscuro
+    this.aplicarTema(this.modoOscuro);
+
+    await this.storageService.set('tema', {
+      modoOscuro: this.modoOscuro
+    });
+
+    console.log('Tema guardado:', this.modoOscuro);
+  }
+
+  aplicarTema(esOscuro: boolean) {
+    this.modoOscuro = esOscuro;
+
+    this.colorSlideActual = esOscuro
       ? this.colorSlideOscuro
       : this.colorSlideClaro;
 
-    this.colorLetrasActualSlide = this.modoOscuro
+    this.colorLetrasActualSlide = esOscuro
       ? this.colorLetrasClarasSlide
       : this.colorLetrasOscuroSlide;
 
-    this.colorTituloActualSlide = this.modoOscuro
+    this.colorTituloActualSlide = esOscuro
       ? this.colorTituloClarasSlide
       : this.colorTituloOscuroSlide;
 
-    this.colorEncabezadoActual = this.modoOscuro
+    this.colorEncabezadoActual = esOscuro
       ? this.colorEncabezadoClaras
-      : this.colorEncabezadoOscuro;  
+      : this.colorEncabezadoOscuro;
 
-    this.isDay = !this.isDay;
-
-    await this.storageService.set('tema', this.colorSlideActual);
-    console.log('Tema guardado:', this.colorSlideActual);
-
+    // 🔥 ESTO ES LO QUE TE FALTABA
+    this.isDay = esOscuro;
   }
 
   get iconoActual() {
@@ -114,8 +121,12 @@ export class IntroPage implements OnInit {
 
   async cargarTemaGuardado() {
     const temaGuardado = await this.storageService.get('tema');
-    if (temaGuardado) {
-      this.colorSlideActual = temaGuardado;
+
+    if (temaGuardado && typeof temaGuardado.modoOscuro === 'boolean') {
+      this.aplicarTema(temaGuardado.modoOscuro);
+    } else {
+      // tema por defecto
+      this.aplicarTema(true);
     }
   }
 
@@ -134,7 +145,7 @@ export class IntroPage implements OnInit {
   }
 
   async goBack() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/menu/home']);
     console.log('Regresando al home...');
   }
 
@@ -145,5 +156,7 @@ export class IntroPage implements OnInit {
   get code() {
     return 'code';
   }
+
+  
 
 }

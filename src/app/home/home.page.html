@@ -1,20 +1,51 @@
-<ion-header [style.--background]="colorSlideActual">
-  <ion-toolbar [style.--background]="colorSlideActual">
-    <ion-title [style.--color]="colorTituloActualSlide">Home</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="cambiarColorSlide()" fill="clear" color="primary">
-        <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
-      </ion-button>
+<ion-header class="music-header" [style.--background]="colorSlideActual">
+  <ion-toolbar class="music-toolbar" [style.--background]="colorSlideActual">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
+
+    <ion-title class="music-title" [style.--color]="colorTituloActualSlide">Mundo Musical</ion-title>
+
     <ion-buttons slot="end">
-      <ion-button (click)="goIntro()" fill="clear" color="primary">
-        <ion-icon slot="icon-only" [name]="code"></ion-icon>
+      <ion-button (click)="cambiarColorSlide()" fill="clear">
+        <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [style.--background]="colorSlideActual">
+<ion-content class="music-content" [style.--background]="colorSlideActual">
 
+  <swiper-container 
+    class="music-swiper"
+    [pagination]="true"
+    loop="true"
+    slides-per-view="1"
+    space-between="20"
+    centered-slides="true">
+
+    <swiper-slide *ngFor="let album of albums; let i = index">
+      
+      <div class="music-card">
+
+        <div class="image-container">
+          <img [src]="album.image" [alt]="album.title">
+          <div class="overlay"></div>
+        </div>
+
+        <div class="music-info">
+          <h1>{{ album.name }}</h1>
+          <p>{{ album.artist || 'Artista desconocido' }}</p>
+
+          <ion-button class="play-btn" shape="round">
+            <ion-icon name="play" slot="start"></ion-icon>
+            Reproducir
+          </ion-button>
+        </div>
+
+      </div>
+
+    </swiper-slide>
+  </swiper-container>
 
 </ion-content>

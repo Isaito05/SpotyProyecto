@@ -1,0 +1,25 @@
+<ion-split-pane contentId="main-content">
+  <ion-menu contentId="main-content" side="start" type="push" menuId="first">
+    <ion-header>
+      <ion-toolbar>
+        <ion-menu-toggle>
+          <ion-icon name="close-circle-outline" size="large" title="Cerrar menú"></ion-icon>
+        </ion-menu-toggle>
+        <ion-icon name="log-out-outline" slot="end" color="danger" (click)="cerrarSesion()" size="large"
+          title="Cerrar sesión"></ion-icon>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content [scrollY]="false" class="menu-content">
+      <div class="menu-wrapper">
+        <ion-list>
+          <ion-item button (click)="goIntro()">
+            <ion-icon name="play-circle-outline" slot="start"></ion-icon>
+            <ion-label>Ver la intro</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+</ion-split-pane>

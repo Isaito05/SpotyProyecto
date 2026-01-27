@@ -5,7 +5,11 @@ import { IonicModule, NavController } from '@ionic/angular';
 import { AuthService } from '../services/auth-service';
 import { StorageService } from '../services/storage-service';
 import { addIcons } from 'ionicons';
-import { sunny, moon, code, personAdd} from 'ionicons/icons';
+import { sunny, moon, code, personAdd } from 'ionicons/icons';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 addIcons({
   'sunny': sunny,
@@ -19,11 +23,29 @@ addIcons({
   styleUrls: ['./login.page.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule, ReactiveFormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginPage implements OnInit {
 
+  colorSlideClaro = "var(--color-claro-fondo-slide)";
+  colorSlideOscuro = "var(--color-oscuro-fondo-slide)";
+  colorLetrasClarasSlide = "var(--color-letras-claras-slide)";
+  colorLetrasOscuroSlide = "var(--color-letras-oscuras-slide)";
+  colorTituloClarasSlide = "var(--color-titulo-claras-slide)";
+  colorTituloOscuroSlide = "var(--color-titulo-oscuras-slide)";
+  colorEncabezadoClaras = "var(--color-encabe-claras-slide)";
+  colorEncabezadoOscuro = "var(--color-encabe-oscuras-slide)";
+
+  modoOscuro = true;
+
+  colorSlideActual = this.colorSlideOscuro;
+  colorLetrasActualSlide = this.colorLetrasClarasSlide;
+  colorTituloActualSlide = this.colorTituloClarasSlide;
+  colorEncabezadoActual = this.colorEncabezadoClaras;
+
   loginForm: FormGroup;
   errorMessage: string = '';
+  isDay: boolean = true;
 
   validationMessages = {
     email: [
@@ -55,21 +77,74 @@ export class LoginPage implements OnInit {
 
   }
 
-   ngOnInit() {
+  async cambiarColorSlide() {
+    this.modoOscuro = !this.modoOscuro;
+
+    this.aplicarTema(this.modoOscuro);
+
+    await this.storageService.set('tema', {
+      modoOscuro: this.modoOscuro
+    });
+
+    console.log('Tema guardado:', this.modoOscuro);
   }
 
-    loginUser(credentials: any) {
+  aplicarTema(esOscuro: boolean) {
+    this.modoOscuro = esOscuro;
+
+    this.colorSlideActual = esOscuro
+      ? this.colorSlideOscuro
+      : this.colorSlideClaro;
+
+    this.colorLetrasActualSlide = esOscuro
+      ? this.colorLetrasClarasSlide
+      : this.colorLetrasOscuroSlide;
+
+    this.colorTituloActualSlide = esOscuro
+      ? this.colorTituloClarasSlide
+      : this.colorTituloOscuroSlide;
+
+    this.colorEncabezadoActual = esOscuro
+      ? this.colorEncabezadoClaras
+      : this.colorEncabezadoOscuro;
+
+    // 🔥 ESTO ES LO QUE TE FALTABA
+    this.isDay = esOscuro;
+  }
+
+  async cargarTemaGuardado() {
+    const temaGuardado = await this.storageService.get('tema');
+
+    if (temaGuardado && typeof temaGuardado.modoOscuro === 'boolean') {
+      this.aplicarTema(temaGuardado.modoOscuro);
+    } else {
+      // tema por defecto
+      this.aplicarTema(true);
+    }
+  }
+
+  get iconoActual() {
+    return this.isDay ? 'sunny' : 'moon';
+  }
+
+  async ngOnInit() {
+    await this.cargarTemaGuardado();
+  }
+
+
+  loginUser(credentials: any) {
     console.log('Login attempt with credentials:', credentials);
     this.authService.loginUser(credentials).then((res) => {
-        this.errorMessage = '';
-        this.navCtrl.navigateForward('/home');
-      }).catch((err) => {
-          this.errorMessage = err;
-        });
+      this.errorMessage = '';
+      this.navCtrl.navigateForward('/menu/home');
+    }).catch((err) => {
+      this.errorMessage = err;
+    });
   }
 
   async goRegistro() {
     this.navCtrl.navigateForward('/registro');
+    this.cargarTemaGuardado();
     console.log('Navegando a registro...');
   }
 

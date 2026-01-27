@@ -14,7 +14,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [style.--background]="colorSlideActual" >
 
   <swiper-container pagination="true" loop="true" slides-per-view="1" >
     <swiper-slide *ngFor="let genre of genres; let i = index">
@@ -29,20 +29,11 @@
       </div>
 
       <div class="slide-footer" *ngIf="i === genres.length - 1">
-        <ion-button shape="round" size="large" fill="solid" color="primary" (click)="goBack()">
-
+        <ion-button class="ion-button-Home" shape="round" size="large" fill="solid" color="primary" (click)="goBack()">
           <ion-icon name="home" slot="start"></ion-icon>
           Home
         </ion-button>
       </div>
     </swiper-slide>
   </swiper-container>
-
-  <!-- <div>
-    <p class="ion-text-center ion-text-uppercase">Texto centrado</p>
-    <p class="ion-text-left ion-text-lowercase">Texto a la izquierda</p>
-    <p class="ion-text-right ion-text-capitalize">Texto a la derecha</p>
-    <p class="ion-hide">Hola no me veo</p>
-    <p class="d-block ion-margin ion-padding">Yo si me veo</p>
-  </div> -->
 </ion-content>

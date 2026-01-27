@@ -3,25 +3,31 @@ import { IntroGuard } from './guards/intro-guard';
 import { LoginGuard } from './guards/login-guard';
 
 export const routes: Routes = [
-  {
-    path: 'home',
-    loadComponent: () => import('./home/home.page').then((m) => m.HomePage), canActivate: [IntroGuard, LoginGuard],
-  },
+
   {
     path: '',
-    redirectTo: 'intro',
+    redirectTo: 'menu/home',
     pathMatch: 'full',
   },
   {
     path: 'intro',
-    loadComponent: () => import('./intro/intro.page').then( m => m.IntroPage)
+    loadComponent: () => import('./intro/intro.page').then(m => m.IntroPage)
   },
   {
     path: 'login',
-    loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
+    loadComponent: () => import('./login/login.page').then(m => m.LoginPage)
   },
   {
     path: 'registro',
-    loadComponent: () => import('./registro/registro.page').then( m => m.RegistroPage)
+    loadComponent: () => import('./registro/registro.page').then(m => m.RegistroPage)
+  },
+  {
+    path: 'menu',
+    loadComponent: () => import('./menu/menu.page').then(m => m.MenuPage),
+    children: [
+      {
+        path: 'home',
+        loadComponent: () => import('./home/home.page').then((m) => m.HomePage), canActivate: [IntroGuard, LoginGuard],
+      },]
   },
 ];

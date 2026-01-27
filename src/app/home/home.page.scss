@@ -1,36 +1,134 @@
-.slide-content {
-  text-align: center;
-  margin: 10px;
+// .slide-content {
+//   text-align: center;
+//   margin: 10px;
+// }
+
+// .slide-content img {
+//   width: 100%;
+//   max-width: 300px;
+//   height: auto;
+//   border-radius: 10%;
+//   margin:  10% 0;
+// }
+
+// .slide-content h2 {
+//   font-size: 25px;
+//   margin:  0;
+//   color: rgb(98, 198, 245);
+// }
+
+
+// .slide-content p {
+//   font-size: 16px;
+//   color: #e4dfdf;
+//   text-align: justify;
+// }
+
+// .card{ 
+//   padding: var(--espaciado-base);
+//   background-color: var(--color-claro);
+// }
+
+// .bg-card-text{
+//   background-color: rgb(231, 34, 142);
+// }
+
+.music-content {
+  --background: linear-gradient(180deg, #050505, #0c0f14, #020202);
 }
 
-.slide-content img {
+/* HEADER */
+.music-header {
+  backdrop-filter: blur(10px);
+}
+
+.music-toolbar {
+  --background: rgba(0,0,0,0.4);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.music-title {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* SWIPER */
+.music-swiper {
+  margin-top: 20px;
+}
+
+/* CARD */
+.music-card {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  padding: 15px;
+  box-shadow: 0 0 40px rgba(0,255,255,0.08);
+  transition: all 0.4s ease;
+}
+
+.music-card:hover {
+  transform: scale(1.03);
+}
+
+/* IMAGE */
+.image-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.image-container img {
   width: 100%;
-  max-width: 300px;
-  height: auto;
-  border-radius: 10%;
-  margin:  10% 0;
+  border-radius: 20px;
 }
 
-.slide-content h2 {
-  font-size: 25px;
-  margin:  0;
-  color: rgb(98, 198, 245);
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
 }
 
-
-.slide-content p {
-  font-size: 16px;
-  color: #e4dfdf;
-  text-align: justify;
+/* INFO */
+.music-info {
+  text-align: center;
+  padding: 15px 10px;
 }
 
-.card{ 
-  padding: var(--espaciado-base);
-  background-color: var(--color-claro);
+.music-info h1 {
+  color: #aaa;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 10px 0 5px;
 }
 
-.bg-card-text{
-  background-color: rgb(231, 34, 142);
+.music-info p {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
 }
 
+/* PLAY BUTTON */
+.play-btn {
+  --background: linear-gradient(135deg, #00f5ff, #00bcd4);
+  --color: #000;
+  font-weight: 700;
+  box-shadow: 0 20 20px rgba(0,255,255,0.4);
+}
+
+/* INTRO FAB */
+.intro-fab {
+  position: fixed;
+  bottom: 25px;
+  right: 20px;
+  z-index: 10;
+}
+
+.intro-fab ion-button {
+  --background: linear-gradient(135deg, #00ffc3, #00bcd4);
+  --color: #000;
+  font-weight: 700;
+  box-shadow: 0 0 30px
+    rgba(0, 255, 255, 0.6);
+}
 

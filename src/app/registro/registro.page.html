@@ -1,6 +1,11 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>registro</ion-title>
+<ion-header [style.--background]="colorSlideActual">
+  <ion-toolbar [style.--background]="colorSlideActual">
+    <ion-title [style.--color]="colorEncabezadoActual">registro</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cambiarColorSlide()" fill="clear" color="primary">
+        <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-buttons slot="end">
       <ion-button (click)="goLogin()" fill="clear" color="primary">
         <ion-icon slot="icon-only" name="log-in" color="secondary"></ion-icon>
@@ -9,46 +14,48 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content >
+<ion-content [style.--background]="colorSlideActual">
   <figure class="profile-default-image ion-text-center">
-      <h1>Registrate</h1>
-      <img src="/assets/img/registro.png" alt="">
-    </figure>
+    <h1>Registrate</h1>
+    <img src="/assets/img/regis.png" alt="">
+  </figure>
 
-    <form [formGroup]="registroForm">
-      <ion-item>
-        <ion-input label="Correo" type="email" labelPlacement="floating" formControlName="email"></ion-input>
-      </ion-item>
-      <ion-note color="danger" class="error-note"
-        *ngIf="registroForm.get('email')?.invalid && (registroForm.get('email')?.dirty )">
-        {{ getEmailError() }}
-      </ion-note>
-      <ion-item>
-        <ion-input label="Contraseña" type="password" labelPlacement="floating" formControlName="password"></ion-input>
-      </ion-item>
-      <ion-note color="danger" class="error-note"
-        *ngIf="registroForm.get('password')?.invalid && (registroForm.get('password')?.dirty )">
-        {{ getPasswordError() }}
-      </ion-note>
-      <ion-item>
-        <ion-input label="Nombre" type="text" labelPlacement="floating" formControlName="nombre"></ion-input>
-      </ion-item>
-      <ion-note color="danger" class="error-note"
-        *ngIf="registroForm.get('nombre')?.invalid && (registroForm.get('nombre')?.dirty )">
-        {{ getNombreError() }}
-      </ion-note>
-      <ion-item>
-        <ion-input label="Apellido" type="text" labelPlacement="floating" formControlName="apellido"></ion-input>
-      </ion-item>
-      <ion-note color="danger" class="error-note"
-        *ngIf="registroForm.get('apellido')?.invalid && (registroForm.get('apellido')?.dirty )">
-        {{ getApellidoError() }}
-      </ion-note>
-      <div class="ion-text-center ion-margin-top">
-        <ion-button shape="round" (click)="RegistrarUser(registroForm.value)" class="registro-button" type="submit" [disabled]="registroForm.invalid">Registrarse</ion-button>
-      </div>
-    </form>
+  <form [formGroup]="registroForm">
+    <ion-item>
+      <ion-input label="Nombre" type="text" labelPlacement="floating" formControlName="nombre"></ion-input>
+    </ion-item>
+    <ion-note color="danger" class="error-note"
+      *ngIf="registroForm.get('nombre')?.invalid && (registroForm.get('nombre')?.dirty )">
+      {{ getNombreError() }}
+    </ion-note>
+    <ion-item>
+      <ion-input label="Apellido" type="text" labelPlacement="floating" formControlName="apellido"></ion-input>
+    </ion-item>
+    <ion-note color="danger" class="error-note"
+      *ngIf="registroForm.get('apellido')?.invalid && (registroForm.get('apellido')?.dirty )">
+      {{ getApellidoError() }}
+    </ion-note>
+    <ion-item>
+      <ion-input label="Correo" type="email" labelPlacement="floating" formControlName="email"></ion-input>
+    </ion-item>
+    <ion-note color="danger" class="error-note"
+      *ngIf="registroForm.get('email')?.invalid && (registroForm.get('email')?.dirty )">
+      {{ getEmailError() }}
+    </ion-note>
+    <ion-item>
+      <ion-input label="Contraseña" type="password" labelPlacement="floating" formControlName="password"></ion-input>
+    </ion-item>
+    <ion-note color="danger" class="error-note"
+      *ngIf="registroForm.get('password')?.invalid && (registroForm.get('password')?.dirty )">
+      {{ getPasswordError() }}
+    </ion-note>
 
-    <p class="danger">{{ errorMessage }}</p>
+    <div class="ion-text-center ion-margin-top">
+      <ion-button shape="round" (click)="RegistrarUser(registroForm.value)" class="registro-button" type="submit"
+        [disabled]="registroForm.invalid">Registrarse</ion-button>
+    </div>
+  </form>
+
+  <p class="danger">{{ errorMessage }}</p>
 
 </ion-content>

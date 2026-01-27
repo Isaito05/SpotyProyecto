@@ -1,0 +1,44 @@
+/* Fondo general del menú */
+ion-menu {
+  --background: linear-gradient(180deg, #121212, #000000);
+}
+
+/* Header */
+ion-menu ion-toolbar {
+  --background: #121212;
+  --color: #ffffff;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Título */
+ion-menu ion-title {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Contenido */
+ion-menu ion-content {
+  --background: transparent;
+}
+
+/* Items */
+ion-menu ion-item {
+  --background: transparent;
+  --color: #eaeaea;
+  --padding-start: 16px;
+  font-size: 15px;
+  border-radius: 8px;
+  margin: 4px 10px;
+}
+
+/* Hover */
+ion-menu ion-item:hover {
+  --background: rgba(174, 43, 250, 0.12);  /* verde spotify */
+}
+
+/* Iconos normales */
+ion-menu ion-icon {
+  color: #eaeaea;
+}
+
+

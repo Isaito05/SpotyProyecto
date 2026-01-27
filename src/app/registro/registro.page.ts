@@ -1,10 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { IonicModule, NavController} from '@ionic/angular';
+import { IonicModule, NavController } from '@ionic/angular';
 import { RegistroService } from '../services/registro-service';
 import { addIcons } from 'ionicons';
-import { sunny, moon, code, logIn} from 'ionicons/icons';
+import { sunny, moon, code, logIn } from 'ionicons/icons';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { register } from 'swiper/element/bundle';
+import { StorageService } from '../services/storage-service';
+
+register();
 
 addIcons({
   'sunny': sunny,
@@ -18,12 +23,30 @@ addIcons({
   templateUrl: './registro.page.html',
   styleUrls: ['./registro.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class RegistroPage implements OnInit {
 
+  colorSlideClaro = "var(--color-claro-fondo-slide)";
+  colorSlideOscuro = "var(--color-oscuro-fondo-slide)";
+  colorLetrasClarasSlide = "var(--color-letras-claras-slide)";
+  colorLetrasOscuroSlide = "var(--color-letras-oscuras-slide)";
+  colorTituloClarasSlide = "var(--color-titulo-claras-slide)";
+  colorTituloOscuroSlide = "var(--color-titulo-oscuras-slide)";
+  colorEncabezadoClaras = "var(--color-encabe-claras-slide)";
+  colorEncabezadoOscuro = "var(--color-encabe-oscuras-slide)";
+
+  modoOscuro = true;
+
+  colorSlideActual = this.colorSlideOscuro;
+  colorLetrasActualSlide = this.colorLetrasClarasSlide;
+  colorTituloActualSlide = this.colorTituloClarasSlide;
+  colorEncabezadoActual = this.colorEncabezadoClaras;
+
   registroForm: FormGroup;
   errorMessage: string = '';
+  isDay: boolean = true;
 
   validationMessages = {
     email: [
@@ -42,7 +65,7 @@ export class RegistroPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, private navCtrl: NavController, private registroService: RegistroService) {
+  constructor(private formBuilder: FormBuilder, private navCtrl: NavController, private registroService: RegistroService, private storageService: StorageService) {
     this.registroForm = this.formBuilder.group({
       email: new FormControl
         ('', Validators.compose([
@@ -65,22 +88,83 @@ export class RegistroPage implements OnInit {
     });
   }
 
+  async cambiarColorSlide() {
+    this.modoOscuro = !this.modoOscuro;
 
-  ngOnInit() {
+    this.aplicarTema(this.modoOscuro);
+
+    await this.storageService.set('tema', {
+      modoOscuro: this.modoOscuro
+    });
+
+    console.log('Tema guardado:', this.modoOscuro);
   }
+
+  aplicarTema(esOscuro: boolean) {
+    this.modoOscuro = esOscuro;
+
+    this.colorSlideActual = esOscuro
+      ? this.colorSlideOscuro
+      : this.colorSlideClaro;
+
+    this.colorLetrasActualSlide = esOscuro
+      ? this.colorLetrasClarasSlide
+      : this.colorLetrasOscuroSlide;
+
+    this.colorTituloActualSlide = esOscuro
+      ? this.colorTituloClarasSlide
+      : this.colorTituloOscuroSlide;
+
+    this.colorEncabezadoActual = esOscuro
+      ? this.colorEncabezadoClaras
+      : this.colorEncabezadoOscuro;
+
+    // 🔥 ESTO ES LO QUE TE FALTABA
+    this.isDay = esOscuro;
+  }
+
+  async cargarTemaGuardado() {
+    const temaGuardado = await this.storageService.get('tema');
+
+    if (temaGuardado && typeof temaGuardado.modoOscuro === 'boolean') {
+      this.aplicarTema(temaGuardado.modoOscuro);
+    } else {
+      // tema por defecto
+      this.aplicarTema(true);
+    }
+  }
+
+  // async cargarIconoGuardado() {
+  //   const iconoGuardado = await this.storageService.get('tema');
+  //   if (iconoGuardado) {
+  //     this.iconoActual = iconoGuardado;
+  //   }
+  // }
+
+  get iconoActual() {
+    return this.isDay ? 'sunny' : 'moon';
+  }
+
+
+  async ngOnInit() {
+   await this.cargarTemaGuardado();
+  }
+
+  
 
   RegistrarUser(datos: any) {
     console.log('Registro attempt with data:', datos);
     this.registroService.registrarUsuario(datos).then((res) => {
-        this.errorMessage = '';
-        this.navCtrl.navigateForward('/login');
-      }).catch((err) => {
-          this.errorMessage = err;
-        });
+      this.errorMessage = '';
+      this.navCtrl.navigateForward('/login');
+    }).catch((err) => {
+      this.errorMessage = err;
+    });
   }
 
   async goLogin() {
     this.navCtrl.navigateForward('/login');
+    this.cargarTemaGuardado();
     console.log('Regresando al login...');
   }
 
