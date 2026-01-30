@@ -29,8 +29,11 @@ export class MenuPage implements OnInit {
   cerrarSesion() {
     // Lógica para cerrar sesión
     this.storageService.remove('login');
+    this.storageService.remove('user');
     this.navCtrl.navigateRoot('/login');
     console.log('Cerrando sesión...');
   }
+
+  
 
 }

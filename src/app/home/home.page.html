@@ -56,13 +56,28 @@
       </div>
     </swiper-slide>
   </swiper-container>
-
 </ion-content>
-<ion-footer>
-<ion-text color="danger" *ngIf="!song.name">
-  <h2>Aqui se vera mi cancion</h2>
-</ion-text>
-<ion-text color="primary" *ngIf="song.name">
-  <h2>{{song.name}}</h2>
-</ion-text>
+
+<ion-footer >
+  <ion-grid [style.background]="colorSlideActual">
+    <ion-row>
+      <ion-col [style.color]="colorTituloActualSlide" class="ion-text-start">{{formatTime(currentSong?.currentTime) || "0.00"}}</ion-col>
+      <ion-col [style.color]="colorTituloActualSlide" class="ion-text-end">{{formatTime(getRemainingTime()) || "0.00"}}</ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-progress-bar [value]="newTime || 0"></ion-progress-bar>
+  <ion-grid [style.background]="colorSlideActual">
+    <ion-row>
+      <ion-col size="1">
+        <ion-icon [style.color]="colorTituloActualSlide" name="heart"></ion-icon>
+      </ion-col>
+      <ion-col size="10">
+        <ion-text [style.color]="colorTituloActualSlide">{{song.name || "Seleccione una cancion"}}</ion-text>
+      </ion-col>
+      <ion-col size="1" >
+        <ion-icon [style.color]="colorTituloActualSlide" name="play" *ngIf="!song.playing" (click)="play()"></ion-icon>
+        <ion-icon [style.color]="colorTituloActualSlide" name="pause" *ngIf="song.playing" (click)="pause()"></ion-icon>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-footer>

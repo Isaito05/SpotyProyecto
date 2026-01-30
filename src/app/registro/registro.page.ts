@@ -65,7 +65,13 @@ export class RegistroPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, private navCtrl: NavController, private registroService: RegistroService, private storageService: StorageService, private toastController: ToastController) {
+  constructor(private formBuilder: FormBuilder, 
+    private navCtrl: NavController, 
+    private registroService: RegistroService, 
+    private storageService: StorageService, 
+    private toastController: ToastController) 
+    {
+
     this.registroForm = this.formBuilder.group({
       email: new FormControl
         ('', Validators.compose([
@@ -159,21 +165,20 @@ export class RegistroPage implements OnInit {
       .then((res) => {
         this.errorMessage = '';
 
-        // ✅ Mensaje bonito de éxito
         this.showToast(
           '🎉 Registro exitoso. Ya puedes iniciar sesión',
           'success',
           'person-add'
         );
 
-        // redirección con pequeño delay para que se vea el toast
+        this.registroForm.reset();
+
         setTimeout(() => {
           this.navCtrl.navigateForward('/login');
         }, 1200);
       })
       .catch((err) => {
 
-        // ❌ Mensaje bonito de error
         this.showToast(
           '❌ Error al registrar usuario. Intenta nuevamente',
           'danger',

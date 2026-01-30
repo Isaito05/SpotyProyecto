@@ -133,33 +133,41 @@ export class LoginPage implements OnInit {
 
 
   loginUser(credentials: any) {
-    console.log('Login attempt with credentials:', credentials);
+  console.log('Login attempt with credentials:', credentials);
 
-    this.authService.loginUser(credentials)
-      .then((res) => {
-        this.errorMessage = '';
+  this.authService.loginUser(credentials)
+    .then((res: any) => {
 
-        // ✅ Mensaje bonito de éxito
-        this.showToast(
-          '¡Bienvenido! Sesión iniciada correctamente 👋',
-          'success',
-          'checkmark-circle'
-        );
+      this.errorMessage = '';
 
-        this.navCtrl.navigateForward('/menu/home');
-      })
-      .catch((err) => {
+      this.showToast(
+        '¡Bienvenido! Sesión iniciada correctamente 👋',
+        'success',
+        'checkmark-circle'
+      );
+      this.loginForm.reset();
+      this.navCtrl.navigateForward('/menu/home');
+  
+    })
+    .catch((err: any) => {
 
-        // ❌ Mensaje bonito de error
-        this.showToast(
-          'Correo o contraseña incorrectos 😕',
-          'danger',
-          'close-circle'
-        );
+      let mensaje = 'Correo o contraseña incorrectos 😕';
 
-        this.errorMessage = 'Credenciales inválidas';
-      });
-  }
+      if (err?.msg) {
+        mensaje = err.msg;
+      } else if (err?.message) {
+        mensaje = err.message;
+      }
+
+      this.showToast(
+        mensaje,
+        'danger',
+        'close-circle'
+      );
+
+      this.errorMessage = mensaje;
+    });
+}
 
 
   async goRegistro() {

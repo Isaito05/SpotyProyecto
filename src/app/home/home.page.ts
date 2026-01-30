@@ -54,7 +54,8 @@ export class HomePage implements OnInit {
     playing: false
   } ;
 
-  currentSong: any;
+  currentSong: any = {};
+  newTime: any;
 
   genres = [
     {
@@ -217,7 +218,41 @@ export class HomePage implements OnInit {
         songs: songs
       }
     });
+    modal.onDidDismiss().then((result)=>{
+      if(result.data){
+        console.log("Cancio recibida:", result.data)
+        this.song = result.data;
+      }
+    })
     return await modal.present();
+  }
+
+  play(){
+    this.currentSong = new Audio(this.song.preview_url);
+    this.currentSong.play();
+    this.currentSong.addEventListener("timeupdate", ()=>{
+      this.newTime = this.currentSong.currentTime / this.currentSong.duration;
+    })
+    this.song.playing = true;
+  }
+
+  pause(){
+    this.currentSong.pause();
+    this.song.playing = false;
+  }
+
+  formatTime(seconds: number){
+    if(!seconds || isNaN(seconds)) return "0.00";
+    const minutes = Math.floor(seconds/60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+
+  getRemainingTime(){
+    if (!this.currentSong?.duration || !this.currentSong?.currentTime){
+      return 0;
+    }
+    return this.currentSong.duration - this.currentSong.currentTime;
   }
 
 }
