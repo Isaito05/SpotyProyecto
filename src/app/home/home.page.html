@@ -4,80 +4,103 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
 
-    <ion-title class="music-title" [style.--color]="colorTituloActualSlide">Mundo Musical</ion-title>
-
+    <div class="ion-text-center" >
+      <p class="user-name">
+        👋 Hola, {{ userName }}
+      </p>
+    </div>
     <ion-buttons slot="end">
       <ion-button (click)="cambiarColorSlide()" fill="clear">
         <ion-icon slot="icon-only" [name]="iconoActual"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+  <ion-toolbar [style.--background]="colorSlideActual" class="filter-toolbar">
+    <ion-segment value="todas" [style.--background]="colorSlideActual">
+      <ion-segment-button value="todas">
+        <ion-label>Todas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="musica">
+        <ion-label>Música</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="podcasts">
+        <ion-label>Podcasts</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="music-content" [style.--background]="colorSlideActual">
 
-  <swiper-container class="music-swiper" [pagination]="true" loop="true" slides-per-view="1" space-between="20"
-    centered-slides="true">
-
-    <swiper-slide *ngFor="let album of albums; let i = index" (click)="showSongs(album.id)">
-      <div class="music-card">
-        <div class="image-container">
-          <img [src]="album.image" [alt]="album.title">
-          <div class="overlay"></div>
-        </div>
-        <div class="music-info">
-          <h1>{{ album.name }}</h1>
-          <p>{{ album.artist || 'Artista desconocido' }}</p>
-          <ion-button class="play-btn" shape="round">
-            <ion-icon name="play" slot="start"></ion-icon>
-            Reproducir
-          </ion-button>
-        </div>
-      </div>
-    </swiper-slide>
-  </swiper-container>
-
-  <swiper-container class="music-swiper" [pagination]="true" loop="true" slides-per-view="1" space-between="20"
-    centered-slides="true">
-
-    <swiper-slide *ngFor="let artist of artists; let i = index" (click)="showSongsByArtist(artist.id)">
-      <div class="music-card">
-        <div class="image-container">
-          <img [src]="artist.image" [alt]="artist.name">
-          <div class="overlay"></div>
-        </div>
-        <div class="music-info">
-          <h1>{{ artist.name || 'Género desconocido' }}</h1>
-          <ion-button class="play-btn" shape="round">
-            <ion-icon name="play" slot="start"></ion-icon>
-            Reproducir
-          </ion-button>
-        </div>
-      </div>
-    </swiper-slide>
-  </swiper-container>
-</ion-content>
-
-<ion-footer >
-  <ion-grid [style.background]="colorSlideActual">
+  <ion-grid class="quick-access">
     <ion-row>
-      <ion-col [style.color]="colorTituloActualSlide" class="ion-text-start">{{formatTime(currentSong?.currentTime) || "0.00"}}</ion-col>
-      <ion-col [style.color]="colorTituloActualSlide" class="ion-text-end">{{formatTime(getRemainingTime()) || "0.00"}}</ion-col>
+      <ion-col size="5" class="quick-card">
+        <img src="/assets/img/newlOGO.png">
+        <span>DJ</span>
+      </ion-col>
+      <ion-col size="5" class="quick-card liked" (click)="abrirFavoritos()">
+        <ion-icon name="heart"></ion-icon>
+        <span>Tus me gusta</span>
+      </ion-col>
     </ion-row>
   </ion-grid>
+
+  <h2 class="section-title">Álbumes</h2>
+
+  <div class="horizontal-scroll">
+    <div class="album-card" *ngFor="let album of albums" (click)="showSongs(album.id)">
+      <img [src]="album.image">
+      <p class="album-name">{{ album.name }}</p>
+      <p class="album-artist">{{ album.artist }}</p>
+    </div>
+  </div>
+
+  <h2 class="section-title">Artistas</h2>
+
+  <div class="horizontal-scroll">
+    <div class="album-card" *ngFor="let artist of artists" (click)="showSongsByArtist(artist.id)">
+      <img [src]="artist.image">
+      <p class="album-name">{{ artist.name }}</p>
+      <p class="album-artist">{{ artist.artist }}</p>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer class="player-footer">
+  <ion-grid [style.background]="colorSlideActual">
+    <ion-row>
+      <ion-col [style.color]="colorTituloActualSlide" class="ion-text-start">
+        {{ formatTime(currentSong?.currentTime) || '0.00' }}
+      </ion-col>
+      <ion-col [style.color]="colorTituloActualSlide" class="ion-text-end">
+        {{ formatTime(getRemainingTime()) || '0.00' }}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
   <ion-progress-bar [value]="newTime || 0"></ion-progress-bar>
+
   <ion-grid [style.background]="colorSlideActual">
     <ion-row>
       <ion-col size="1">
-        <ion-icon [style.color]="colorTituloActualSlide" name="heart"></ion-icon>
+        <ion-icon [style.color]="colorTituloActualSlide" (click)="GestionarFavoritos()" [name]="iconoFavorita">
+        </ion-icon>
       </ion-col>
-      <ion-col size="10">
-        <ion-text [style.color]="colorTituloActualSlide">{{song.name || "Seleccione una cancion"}}</ion-text>
+
+      <ion-col size="10" class="ion-text-center">
+        <ion-text [style.color]="colorTituloActualSlide">
+          {{ song.name || 'Seleccione una canción' }}
+        </ion-text>
       </ion-col>
-      <ion-col size="1" >
+
+      <ion-col size="1">
         <ion-icon [style.color]="colorTituloActualSlide" name="play" *ngIf="!song.playing" (click)="play()"></ion-icon>
         <ion-icon [style.color]="colorTituloActualSlide" name="pause" *ngIf="song.playing" (click)="pause()"></ion-icon>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-footer>
+
+<ion-item *ngFor="let fav of favoritos">
+  {{ fav.name }}
+</ion-item>

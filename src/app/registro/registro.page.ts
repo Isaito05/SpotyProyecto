@@ -8,6 +8,7 @@ import { sunny, moon, code, logIn } from 'ionicons/icons';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 import { StorageService } from '../services/storage-service';
+import { LoadingController } from '@ionic/angular';
 
 register();
 
@@ -65,12 +66,11 @@ export class RegistroPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, 
-    private navCtrl: NavController, 
-    private registroService: RegistroService, 
-    private storageService: StorageService, 
-    private toastController: ToastController) 
-    {
+  constructor(private loadingCtrl: LoadingController, private formBuilder: FormBuilder,
+    private navCtrl: NavController,
+    private registroService: RegistroService,
+    private storageService: StorageService,
+    private toastController: ToastController) {
 
     this.registroForm = this.formBuilder.group({
       email: new FormControl
@@ -158,13 +158,23 @@ export class RegistroPage implements OnInit {
 
 
 
-  RegistrarUser(datos: any) {
+  async RegistrarUser(datos: any) {
     console.log('Registro attempt with data:', datos);
 
-    this.registroService.registrarUsuario(datos)
-      .then((res) => {
-        this.errorMessage = '';
+    const loading = await this.loadingCtrl.create({
+      message: 'Registrando usuario...',
+      spinner: 'dots',
+      backdropDismiss: false
+    });
 
+    await loading.present();
+
+    this.registroService.registrarUsuario(datos)
+      .then(async (res) => {
+
+        await loading.dismiss(); 
+
+        this.errorMessage = '';
         this.showToast(
           '🎉 Registro exitoso. Ya puedes iniciar sesión',
           'success',
@@ -177,7 +187,9 @@ export class RegistroPage implements OnInit {
           this.navCtrl.navigateForward('/login');
         }, 1200);
       })
-      .catch((err) => {
+      .catch(async (err) => {
+
+        await loading.dismiss(); 
 
         this.showToast(
           '❌ Error al registrar usuario. Intenta nuevamente',
@@ -188,6 +200,7 @@ export class RegistroPage implements OnInit {
         this.errorMessage = 'Error en el registro';
       });
   }
+
 
 
   async goLogin() {
@@ -249,7 +262,7 @@ export class RegistroPage implements OnInit {
     const toast = await this.toastController.create({
       message,
       duration: 2500,
-      position: 'bottom',
+      position: 'top',
       color,
       icon,
       buttons: [

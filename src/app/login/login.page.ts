@@ -8,6 +8,7 @@ import { addIcons } from 'ionicons';
 import { sunny, moon, code, personAdd } from 'ionicons/icons';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { register } from 'swiper/element/bundle';
+import { LoadingController } from '@ionic/angular';
 
 register();
 
@@ -58,7 +59,7 @@ export class LoginPage implements OnInit {
     ]
   };
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService, private toastController: ToastController) {
+  constructor(private loadingCtrl: LoadingController, private formBuilder: FormBuilder, private authService: AuthService, private navCtrl: NavController, private storageService: StorageService, private toastController: ToastController) {
 
     this.loginForm = this.formBuilder.group({
       email: new FormControl
@@ -132,42 +133,53 @@ export class LoginPage implements OnInit {
   }
 
 
-  loginUser(credentials: any) {
-  console.log('Login attempt with credentials:', credentials);
+  async loginUser(credentials: any) {
+    console.log('Login attempt with credentials:', credentials);
 
-  this.authService.loginUser(credentials)
-    .then((res: any) => {
-
-      this.errorMessage = '';
-
-      this.showToast(
-        '¡Bienvenido! Sesión iniciada correctamente 👋',
-        'success',
-        'checkmark-circle'
-      );
-      this.loginForm.reset();
-      this.navCtrl.navigateForward('/menu/home');
-  
-    })
-    .catch((err: any) => {
-
-      let mensaje = 'Correo o contraseña incorrectos 😕';
-
-      if (err?.msg) {
-        mensaje = err.msg;
-      } else if (err?.message) {
-        mensaje = err.message;
-      }
-
-      this.showToast(
-        mensaje,
-        'danger',
-        'close-circle'
-      );
-
-      this.errorMessage = mensaje;
+    const loading = await this.loadingCtrl.create({
+      message: 'Iniciando sesión...',
+      spinner: 'dots',
+      backdropDismiss: false
     });
-}
+
+    await loading.present();
+
+    this.authService.loginUser(credentials)
+      .then(async (res: any) => {
+
+        await loading.dismiss(); 
+        this.errorMessage = '';
+        this.showToast(
+          '¡Bienvenido! Sesión iniciada correctamente 👋',
+          'success',
+          'checkmark-circle'
+        );
+
+        this.loginForm.reset();
+        this.navCtrl.navigateForward('/menu/home');
+      })
+      .catch(async (err: any) => {
+
+        await loading.dismiss(); 
+
+        let mensaje = 'Correo o contraseña incorrectos 😕';
+
+        if (err?.msg) {
+          mensaje = err.msg;
+        } else if (err?.message) {
+          mensaje = err.message;
+        }
+
+        this.showToast(
+          mensaje,
+          'danger',
+          'close-circle'
+        );
+
+        this.errorMessage = mensaje;
+      });
+  }
+
 
 
   async goRegistro() {
@@ -209,7 +221,7 @@ export class LoginPage implements OnInit {
     const toast = await this.toastController.create({
       message,
       duration: 2500,
-      position: 'bottom',
+      position: 'top',
       color,
       icon,
       buttons: [

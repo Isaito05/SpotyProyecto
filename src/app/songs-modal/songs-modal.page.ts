@@ -26,6 +26,10 @@ export class SongsModalPage implements OnInit {
     await this.modalCtrl.dismiss(song);
   }
 
+  async closeModal(){
+    await this.modalCtrl.dismiss();
+  }
+
 }
 
 

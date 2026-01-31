@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>❤️ Mis me gustas</ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="close-circle-outline" (click)="cerrar()" size="large" title="Cerrar menú"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list *ngIf="favoritos.length > 0; else sinFavoritos">
+
+    <ion-item *ngFor="let song of favoritos">
+      <ion-avatar slot="start">
+        <img [src]=" 'assets/img/musica3.jpg'">
+      </ion-avatar>
+
+      <ion-label>
+        <h2>{{ song.name }}</h2>
+        <p>{{ song.artist }}</p>
+      </ion-label>
+      <ion-button fill="clear" color="danger" slot="end" (click)="eliminarFavorito(song)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-item>
+
+  </ion-list>
+
+  <ng-template #sinFavoritos>
+    <ion-text class="ion-text-center">
+      <p style="margin-top: 40px;">💔 No tienes canciones favoritas aún</p>
+    </ion-text>
+  </ng-template>
+
+</ion-content>

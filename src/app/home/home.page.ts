@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonicModule, ModalController} from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular';
 //import { IonicModule} from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -9,7 +9,7 @@ import { StorageService } from '../services/storage-service';
 import { Router } from '@angular/router';
 import { MusicService } from '../services/music-service';
 import { SongsModalPage } from '../songs-modal/songs-modal.page';
-
+import { FavoritosModalPage } from '../favoritos-modal/favoritos-modal.page';
 
 
 addIcons({
@@ -50,12 +50,16 @@ export class HomePage implements OnInit {
   artists: any;
   song: any = {
     name: "",
-    prview_url:"",
+    prview_url: "",
     playing: false
-  } ;
+  };
 
   currentSong: any = {};
   newTime: any;
+  errorMessage: string = '';
+  favoritos: any;
+  esfavorita: any;
+  userName: string = '';
 
   genres = [
     {
@@ -77,7 +81,7 @@ export class HomePage implements OnInit {
 
   ]
 
-  constructor(private storageService: StorageService, private router: Router, private musicService: MusicService, private modalController: ModalController) { }
+  constructor(private toastController: ToastController, private storageService: StorageService, private router: Router, private musicService: MusicService, private modalController: ModalController) { }
 
   async ngOnInit() {
     this.loadAlbums();
@@ -86,6 +90,10 @@ export class HomePage implements OnInit {
     await this.cargarTemaGuardado();
     this.simularCargarDatos();
     this.getLocalArtists();
+    const user = await this.storageService.get('user');
+    if (user) {
+      this.userName = user.name;
+    }
   }
 
   loadTracks() {
@@ -193,14 +201,16 @@ export class HomePage implements OnInit {
     console.log('Canciones del álbum:', songs);
 
     const modal = await this.modalController.create({
-      component: SongsModalPage, 
+      component: SongsModalPage,
       componentProps: {
         songs: songs
       }
     });
-    modal.onDidDismiss().then((result)=>{
-      if(result.data){
+    modal.onDidDismiss().then(async (result) => {
+      if (result.data) {
+        this.song = result.data;
         console.log("Cancio recibida:", result.data)
+        await this.cancionFavorita(this.song);
         this.song = result.data;
       }
     })
@@ -213,13 +223,15 @@ export class HomePage implements OnInit {
     console.log('Canciones del artista:', songs);
 
     const modal = await this.modalController.create({
-      component: SongsModalPage, 
+      component: SongsModalPage,
       componentProps: {
         songs: songs
       }
     });
-    modal.onDidDismiss().then((result)=>{
-      if(result.data){
+    modal.onDidDismiss().then(async (result) => {
+      if (result.data) {
+        this.song = result.data;
+        await this.cancionFavorita(this.song);
         console.log("Cancio recibida:", result.data)
         this.song = result.data;
       }
@@ -227,32 +239,128 @@ export class HomePage implements OnInit {
     return await modal.present();
   }
 
-  play(){
+  play() {
     this.currentSong = new Audio(this.song.preview_url);
     this.currentSong.play();
-    this.currentSong.addEventListener("timeupdate", ()=>{
+    this.currentSong.addEventListener("timeupdate", () => {
       this.newTime = this.currentSong.currentTime / this.currentSong.duration;
     })
     this.song.playing = true;
   }
 
-  pause(){
+  pause() {
     this.currentSong.pause();
     this.song.playing = false;
   }
 
-  formatTime(seconds: number){
-    if(!seconds || isNaN(seconds)) return "0.00";
-    const minutes = Math.floor(seconds/60);
+  formatTime(seconds: number) {
+    if (!seconds || isNaN(seconds)) return "0.00";
+    const minutes = Math.floor(seconds / 60);
     const remainingSeconds = Math.floor(seconds % 60);
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }
 
-  getRemainingTime(){
-    if (!this.currentSong?.duration || !this.currentSong?.currentTime){
+  getRemainingTime() {
+    if (!this.currentSong?.duration || !this.currentSong?.currentTime) {
       return 0;
     }
     return this.currentSong.duration - this.currentSong.currentTime;
+  }
+
+  async showToast(message: string, color: string = 'success', icon: string = 'checkmark-circle') {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2500,
+      position: 'bottom',
+      color,
+      icon,
+      buttons: [
+        {
+          text: 'OK',
+          role: 'cancel'
+        }
+      ]
+    });
+    await toast.present();
+  }
+
+  GestionarFavoritos() {
+    if (this.esfavorita) {
+      this.eliminarFavorito();
+    } else {
+      this.registrarFavorito();
+    }
+  }
+
+  async registrarFavorito() {
+    (await this.musicService.RegistrarFavorita(this.song)).subscribe({
+      next: (res) => {
+        this.toastController.create({
+          message: '🎉 Canción guardada como favorita',
+          duration: 2000,
+          position: 'top',
+          color: 'success'
+        }).then(toast => toast.present());
+        this.cancionFavorita(this.song);
+      },
+      error: (err) => {
+        console.error('Error al guardar la canción favorita', err);
+      }
+    });
+  }
+
+  async eliminarFavorito() {
+    (await this.musicService.removeFavorite(this.song)).subscribe({
+      next: (res) => {
+        this.toastController.create({
+          message: '❌ Canción eliminada como favorita',
+          duration: 2000,
+          position: 'top',
+          color: 'danger'
+        }).then(toast => toast.present());
+        this.cancionFavorita(this.song);
+      },
+      error: (err) => {
+        console.error('Error al eliminara la canción favorita', err);
+      }
+    });
+  }
+
+  async cancionFavorita(song: any) {
+    (await this.musicService.getFavoritos(song)).subscribe({
+      next: (res) => {
+        this.esfavorita = res;
+      },
+      error: (err) => {
+        console.error('Error al verificar si la canción es favorita', err);
+      }
+    });
+  }
+
+  get iconoFavorita() {
+    return this.esfavorita ? 'close'  : 'heart';
+  }
+
+  async abrirFavoritos() {
+    const obs = await this.musicService.getFavoritosByUser();
+
+    obs.subscribe(async (data) => {
+      const modal = await this.modalController.create({
+        component: FavoritosModalPage,
+        componentProps: {
+          favoritos: data
+        }
+      });
+
+      await modal.present();
+
+      // 👇 AQUÍ ESTÁ LA MAGIA
+      const { data: result } = await modal.onDidDismiss();
+
+      if (result?.actualizado) {
+        this.cancionFavorita(this.song); // vuelve a verificar
+      }
+    });
   }
 
 }

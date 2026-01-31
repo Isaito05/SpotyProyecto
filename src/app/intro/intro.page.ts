@@ -77,7 +77,7 @@ export class IntroPage implements OnInit {
   async ngOnInit() {
     await this.cargarTemaGuardado();
     this.simularCargarDatos();
-    await this.storageService.set('pestaña', 'ya estuve en el intro');
+    
   }
 
   async cambiarColorSlide() {
@@ -145,6 +145,7 @@ export class IntroPage implements OnInit {
   }
 
   async goBack() {
+    await this.storageService.set('pestaña', 'ya estuve en el intro');
     this.router.navigate(['/menu/home']);
     console.log('Regresando al home...');
   }

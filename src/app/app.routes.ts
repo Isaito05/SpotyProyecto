@@ -2,11 +2,12 @@ import { Routes } from '@angular/router';
 import { IntroGuard } from './guards/intro-guard';
 import { LoginGuard } from './guards/login-guard';
 
+
 export const routes: Routes = [
 
   {
     path: '',
-    redirectTo: 'menu/home',
+    redirectTo: 'intro',
     pathMatch: 'full',
   },
   {
@@ -34,4 +35,9 @@ export const routes: Routes = [
     path: 'songs-modal',
     loadComponent: () => import('./songs-modal/songs-modal.page').then( m => m.SongsModalPage)
   },
+  {
+    path: 'favoritos-modal',
+    loadComponent: () => import('./favoritos-modal/favoritos-modal.page').then( m => m.FavoritosModalPage)
+  },
+
 ];

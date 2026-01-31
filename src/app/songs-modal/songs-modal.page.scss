@@ -1,0 +1,58 @@
+.songs-toolbar {
+  --background: #121212;
+  min-height: 56px;
+}
+
+.songs-title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin-right: 100px;
+}
+
+.songs-content {
+  --background: #121212;
+}
+
+/* ITEM */
+.song-item {
+  --min-height: 56px; /* 🔥 evita montarse */
+  padding: 6px 0;
+  border-bottom: 1px solid #222;
+}
+
+/* TEXTO */
+.song-item h2 {
+  font-size: 15px;
+  color: white;
+  margin: 0;
+}
+
+/* NUMERO */
+.song-number {
+  background: #05969b;
+  color: black;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* PLAY */
+.song-item ion-icon {
+  font-size: 24px;
+  color: #05969b;
+}
+
+/* CLICK */
+.song-item:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.close-btn{
+    width: 75%;
+    padding: auto;
+}

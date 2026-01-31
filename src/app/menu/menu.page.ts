@@ -23,6 +23,7 @@ export class MenuPage implements OnInit {
   }
 
   goIntro() {
+    this.storageService.remove('pestaña');
     this.navCtrl.navigateForward('/intro');
   }
 
